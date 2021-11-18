@@ -11,6 +11,19 @@ var port = process.env.PORT || 3000;
 var cors = require('cors');
 app.use(cors({optionsSuccessStatus: 200}));  // some legacy browsers choke on 204
 
+// Database Config
+const connection = require('./db.config')
+connection.once('open', () => console.log('DB Connected'))
+connection.on('error', () => console.log('Error'))
+
+// Routes Config
+app.use(express.json({
+  extended: false
+})) 
+//parse incoming request body in JSON format.
+// app.use('/api', require('./routes/redirect'))
+app.use('/api', require('./routes/url'))
+
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('public'));
 
@@ -27,13 +40,22 @@ app.get("/requestHeader", function (req, res) {
   res.sendFile(__dirname + '/views/requestHeader.html');
 });
 
+app.get("/urlShortener", function (req, res) {
+  res.sendFile(__dirname + '/views/urlShortener.html');
+});
+
 // your first API endpoint... 
 app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
   console.log({greeting: 'hello API'});
 });
 
-//Request Header Parser API endpoint
+// //URL Shortener API endpoint...
+// app.post("/api/shorturl", function(req, res){
+//   res.json({ original_url : 'https://freeCodeCamp.org', short_url : 1});
+// });
+
+//Request Header Parser API endpoint...
 
 app.get("/api/whoami", function(req, res){
 
