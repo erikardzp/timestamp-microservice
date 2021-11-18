@@ -27,13 +27,23 @@ app.get("/requestHeader", function (req, res) {
   res.sendFile(__dirname + '/views/requestHeader.html');
 });
 
-
 // your first API endpoint... 
 app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
   console.log({greeting: 'hello API'});
 });
 
+//Request Header Parser API endpoint
+
+app.get("/api/whoami", function(req, res){
+
+  let ip = req.header('x-forwarded-for') || req.socket.remoteAddress;
+  res.json({"res": Object.keys(req),
+            "ipaddress": ip, "language": req.headers["accept-language"], "software": req.headers["user-agent"]
+          });
+});
+
+// Timestamp API endpoint... 
 app.get("/api/:date", function (req, res) {
 
   let date = req.params.date;
@@ -46,9 +56,9 @@ app.get("/api/:date", function (req, res) {
 
   let passedValue = new Date(date);
   
-  if (passedValue == "Invalid Date" )
-    res.json({ error : "Invalid Date" });
-  else{
+  if (passedValue == "Invalid Date" ){
+      res.json({ error : "Invalid Date" });
+  }else{
     res.json({"unix": passedValue.getTime(), "utc": passedValue.toUTCString()}
     );
   }      
@@ -60,6 +70,7 @@ app.get("/api", function (req, res) {
   res.json({"unix": date.getTime(), "utc": date.toUTCString()}
     ); 
 });
+
 
 
 // listen for requests :)
