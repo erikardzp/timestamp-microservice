@@ -29,6 +29,13 @@ app.get("/api/hello", function (req, res) {
 app.get("/api/:date", function (req, res) {
 
   let date = req.params.date;
+  
+  if(parseInt(date) > 10000) {
+    let unixtime = new Date(parseInt(date));
+    res.json({"unix": unixtime.getTime(), "utc": unixtime.toUTCString()}
+    );
+  }
+
   let passedValue = new Date(date);
   
   if (passedValue == "Invalid Date" )
@@ -45,7 +52,6 @@ app.get("/api", function (req, res) {
   res.json({"unix": date.getTime(), "utc": date.toUTCString()}
     ); 
 });
-
 
 
 // listen for requests :)
