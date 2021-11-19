@@ -2,6 +2,7 @@
 const express = require('express')
 const validUrl = require('valid-url')
 const shortid = require('shortid')
+const urlExists = require("url-exists");
 // Introduce el middleware
 const bodyParser = require("body-parser");
 
@@ -28,8 +29,8 @@ router.post('/shorturl', async (req, res) => {
     } = req.body // destructure the longUrl from req.body.longUrl
 
     // check base url if valid using the validUrl.isUri method
-    if (!validUrl.isUri(baseUrl)) {
-        return res.status(401).json('Invalid base URL')
+    if (!validUrl.isUri(url)) {
+        return res.status(401).json({error: 'invalid url'})
     }
 
     // if valid, we create the url code
@@ -70,7 +71,7 @@ router.post('/shorturl', async (req, res) => {
             res.status(500).json('Server Error')
         }
     } else {
-        res.status(401).json({"error": "Invalid URL"})
+        res.status(401).json({error: 'invalid url'})
     }
 })
 

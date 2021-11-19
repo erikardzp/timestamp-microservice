@@ -21,7 +21,7 @@ app.use(express.json({
   extended: false
 })) 
 //parse incoming request body in JSON format.
-// app.use('/api', require('./routes/redirect'))
+app.use('/api/shorturl', require('./routes/redirect'))
 app.use('/api', require('./routes/url'))
 
 // http://expressjs.com/en/starter/static-files.html
@@ -50,13 +50,7 @@ app.get("/api/hello", function (req, res) {
   console.log({greeting: 'hello API'});
 });
 
-// //URL Shortener API endpoint...
-// app.post("/api/shorturl", function(req, res){
-//   res.json({ original_url : 'https://freeCodeCamp.org', short_url : 1});
-// });
-
 //Request Header Parser API endpoint...
-
 app.get("/api/whoami", function(req, res){
 
   let ip = req.header('x-forwarded-for') || req.socket.remoteAddress;
