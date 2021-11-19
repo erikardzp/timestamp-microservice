@@ -65,7 +65,7 @@ router.post('/shorturl', (req, res) => {
                 res.status(500).json('Server Error')
             }
         }else{
-            res.status(401).json({error: 'invalid url'})
+            res.json({error: 'invalid url'})
         }
     });
 })
