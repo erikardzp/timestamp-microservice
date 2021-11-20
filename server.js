@@ -4,6 +4,7 @@
 // init project
 var express = require('express');
 var app = express();
+const bodyParser = require("body-parser");
 var port = process.env.PORT || 3000;
 
 // enable CORS (https://en.wikipedia.org/wiki/Cross-origin_resource_sharing)
@@ -16,11 +17,17 @@ const connection = require('./db.config')
 connection.once('open', () => console.log('DB Connected'))
 connection.on('error', () => console.log('Error'))
 
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
+
+// import the Url database model
+const User = require('./models/userModel')
+
 // Routes Config
 app.use(express.json({
   extended: false
 })) 
-//parse incoming request body in JSON format.
+//Parse incoming request body in JSON format.
 app.use('/api/shorturl', require('./routes/redirect'))
 app.use('/api', require('./routes/url'))
 
@@ -44,10 +51,30 @@ app.get("/urlShortener", function (req, res) {
   res.sendFile(__dirname + '/views/urlShortener.html');
 });
 
+app.get("/exerciseTracker", function (req, res) {
+  res.sendFile(__dirname + '/views/exerciseTracker.html');
+});
+
 // your first API endpoint... 
 app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
   console.log({greeting: 'hello API'});
+});
+
+//Exercise Tracker... 
+app.post("/api/users", function (req, res) {
+
+  let username = req.body.username;
+
+  username = new User({username});
+  username.save();
+  res.json(username);
+});
+
+app.get("/api/users", async function (req, res) {
+
+  let all = await User.find({}).exec();
+  res.json(all);
 });
 
 //Request Header Parser API endpoint...

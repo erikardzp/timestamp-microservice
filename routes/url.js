@@ -3,7 +3,6 @@ const express = require('express')
 const validUrl = require('valid-url')
 const shortid = require('shortid')
 const urlExists = require("url-exists");
-// Introduce el middleware
 const bodyParser = require("body-parser");
 
 // creating express route handler
