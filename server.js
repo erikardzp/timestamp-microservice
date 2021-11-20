@@ -21,9 +21,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 // import the models of our database model
-const User = require('./models/userModel')
-const Exercise = require('./models/exerciseModel');
-const exerciseModel = require('./models/exerciseModel');
+const User = require('./models/userModel');
 
 // Routes Config
 app.use(express.json({
@@ -70,7 +68,7 @@ app.post("/api/users", function (req, res) {
 
   username = new User({username});
   username.save();
-  res.json(username);
+  res.json({username: username.username, _id:username._id});
 });
 
 app.get("/api/users", async function (req, res) {
@@ -81,7 +79,6 @@ app.get("/api/users", async function (req, res) {
 
 app.post("/api/users/:_id/exercises", async function (req, res) {
 
-  var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   let id = req.params._id;
   let description = req.body.description;
   let duration = req.body.duration;
@@ -97,19 +94,14 @@ app.post("/api/users/:_id/exercises", async function (req, res) {
     date = date_ob.toDateString();
   }   
 
-  // Finding a document whose id=5ebadc45a99bde77b2efb20e
-  let user = await User.findById(id).exec();
-
-  let exercise = new Exercise({description, duration, date});
+  let user = await User.findByIdAndUpdate(id, { description: description, duration: duration, date: date});
   
-  await exercise.save();
-
   res.json({
     username: user.username,
-    description: exercise.description,
-    duration: exercise.duration,
-    date: exercise.date,
-    _id: id
+    description: user.description,
+    duration: user.duration,
+    date: user.date,
+    _id: id,
   })
 });
 
