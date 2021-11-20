@@ -20,8 +20,10 @@ connection.on('error', () => console.log('Error'))
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
-// import the Url database model
+// import the models of our database model
 const User = require('./models/userModel')
+const Exercise = require('./models/exerciseModel');
+const exerciseModel = require('./models/exerciseModel');
 
 // Routes Config
 app.use(express.json({
@@ -75,6 +77,40 @@ app.get("/api/users", async function (req, res) {
 
   let all = await User.find({}).exec();
   res.json(all);
+});
+
+app.post("/api/users/:_id/exercises", async function (req, res) {
+
+  var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  let id = req.params._id;
+  let description = req.body.description;
+  let duration = req.body.duration;
+  let date = req.body.date;
+
+  if(!date){
+  // current timestamp in milliseconds
+    let ts = Date.now();
+    let date_ob = new Date(ts);
+    date = date_ob.toDateString();
+  }else{
+    let date_ob = new Date(date); 
+    date = date_ob.toDateString();
+  }   
+
+  // Finding a document whose id=5ebadc45a99bde77b2efb20e
+  let user = await User.findById(id).exec();
+
+  let exercise = new Exercise({description, duration, date});
+  
+  await exercise.save();
+
+  res.json({
+    username: user.username,
+    description: exercise.description,
+    duration: exercise.duration,
+    date: exercise.date,
+    _id: id
+  })
 });
 
 //Request Header Parser API endpoint...
