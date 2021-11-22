@@ -22,7 +22,7 @@ app.use(bodyParser.json());
 
 // import the models of our database model
 const User = require('./models/userModel');
-
+const Exercise = require('./models/ExerciseModel');
 // Routes Config
 app.use(express.json({
   extended: false
@@ -77,32 +77,42 @@ app.get("/api/users", async function (req, res) {
   res.json(all);
 });
 
-app.post("/api/users/:_id/exercises", async function (req, res) {
+app.post("/api/users/:_id/exercises", bodyParser.urlencoded({extended: false}), function (req, res) {
 
-  let id = req.params._id;
-  let description = req.body.description;
-  let duration = req.body.duration;
-  let date = req.body.date;
-
-  if(!date){
-  // current timestamp in milliseconds
-    let ts = Date.now();
-    let date_ob = new Date(ts);
-    date = date_ob.toDateString();
-  }else{
-    let date_ob = new Date(date); 
-    date = date_ob.toDateString();
-  }   
-
-  let user = await User.findByIdAndUpdate(id, { description: description, duration: duration, date: date});
-  
-  res.json({
-    username: user.username,
-    description: user.description,
-    duration: user.duration,
-    date: user.date,
-    _id: user._id,
+  let id = req.params._id
+  let exerciseModel = new Exercise({
+    description : req.body.description, 
+    duration: parseInt(req.body.duration), 
+    date: req.body.date
   })
+
+  if (exerciseModel.date ===''){
+    exerciseModel.date = new Date().toISOString().substring(0,10);
+  }
+
+  User.findByIdAndUpdate(id, 
+    {$push: {log: exerciseModel}}, 
+    {new: true},
+    function(err, updatedUser){
+      if (err) return console.error(err);
+      let resObject = {}
+      resObject['username'] = updatedUser.username,
+      resObject['description'] = exerciseModel.description,
+      resObject['duration'] = exerciseModel.duration,
+      resObject['date'] = new Date(exerciseModel.date).toDateString(),
+      resObject['_id'] = updatedUser._id
+      res.json(resObject);
+    }
+  )
+  
+});
+
+app.get("/api/users/:_id/logs", function(req, res){
+
+  let ip = req.header('x-forwarded-for') || req.socket.remoteAddress;
+  res.json({
+            "ipaddress": ip, "language": req.headers["accept-language"], "software": req.headers["user-agent"]
+          });
 });
 
 //Request Header Parser API endpoint...

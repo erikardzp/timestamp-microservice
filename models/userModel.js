@@ -1,14 +1,13 @@
 const mongoose = require('mongoose')
+const ExerciseSchema = require('./ExerciseModel').schema;
 
 // instantiate a mongoose schema
 const userSchema = new mongoose.Schema({
-    username: String,
-    description: String,
-    duration: String,
-    date: {
+    username: {
         type: String,
-        default: Date.now
-    }
+        required: true
+    },
+    log: [ExerciseSchema]
 })
 
 // create a model from schema and export it
