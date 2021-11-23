@@ -77,47 +77,33 @@ app.get("/api/users", async function (req, res) {
   res.json(all);
 });
 
-app.post("/api/users/:_id/exercises", async (req, res) => {
-  const { description, duration, date } = req.body;
+const defaultDate = () => new Date().toISOString();
 
-  let newExercise = new Exercise({
-    description,
-    duration,
-    date,
-  });
-
-  if (newExercise.date) {
-    newExercise.date = new Date(newExercise.date).toISOString()
-  }
-
-  if (newExercise.date === "") {
-    newExercise.date = new Date().toISOString()
-  }
-  const saveExercise = new Exercise({
-    userId: req.params._id,
-    description,
-    duration,
-    date,
-  });
-
-  await saveExercise.save();
+app.post("/api/users/:_id/exercises", (req,res) => {
+  const userId = req.params._id
+ let exercises = {
+   description: req.body.description,
+   duration: Number(req.body.duration),
+   date: req.body.date || defaultDate()
+ }
   User.findByIdAndUpdate(
-    req.params._id,
-    { $push: { log: newExercise } },
-    { new: true },
-    (error, updatedUser) => {
-      if (!error) {
-        let responseObject = {};
-        responseObject["username"] = updatedUser.username;
-        responseObject["description"] = newExercise.description;
-        responseObject["duration"] = newExercise.duration;
-        responseObject["date"] = new Date(newExercise.date).toDateString();
-        responseObject["_id"] = updatedUser.id;
-        res.json(responseObject);
-      }
-    }
-  );
-});
+     userId, // find user by _id
+     {$push: { log: exercises} }, // add exObj to exercices[]
+     {new: true},
+      (err, data) => {
+       if(err) return console.log(err)
+       let returnObj = {
+         username: data.username,
+         description: exercises.description,
+         duration: exercises.duration,
+        _id: userId,
+         date: new Date(exercises.date).toDateString()
+       };
+       res.json(returnObj);
+     }
+   );
+ 
+ })
 
 app.get("/api/users/:_id/logs", async function (req, res) {
 
@@ -169,25 +155,6 @@ app.get("/api/users/:_id/logs", async function (req, res) {
     log: new_list,
   });
 });
-
-
-app.get("/api/users/:_id/logs", function (req, res) {
-
-  id = req.params._id;
-  
-  User.findById(id, function (err, result) {
-
-    if (err) console.log(err)
-    let resObject = result;
-    resObject['count'] = result.log.length; 
-    res.json(resObject);
-
-  })
-});
-
-
-
-
 
 //Request Header Parser API endpoint...
 app.get("/api/users/:_id/log", function(req, res){
