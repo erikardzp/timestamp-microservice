@@ -107,46 +107,55 @@ app.post("/api/users/:_id/exercises", bodyParser.urlencoded({extended: false}), 
   
 });
 
-app.get("/api/users/:_id/logs", function (req, res) {
+app.get("/api/users/:_id/logs", async function (req, res) {
 
-  id = req.params._id;
-  
-  User.findById(id, function (err, result) {
+  const result = await User.findById(req.params._id);
+  let responseObject = result;
 
-    if (err) console.log(err)
-    let resObject = result
-    resObject =  resObject.toJSON();
-    resObject['count'] = result.log.length; 
 
-    if(req.query.from || req.query.to){
-      
-      let fromDate = new Date(0)
-      let toDate = new Date()
-
-      if(req.query.from){
-        fromDate = new Date(req.query.from)
-      }
-
-      if(req.query.to){
-        toDate = new Date(req.query.to)
-      }
-
-      fromDate = fromDate.getTime()
-      toDate= toDate.getTime()
-
-      resObject.log = resObject.log.filter(function (session){
-        let sessionDate = new Date(session.date).getTime()
-
-        return sessionDate >= fromDate && sessionDate <= toDate
-      })
+  if(req.query.from || req.query.to){
+    let fromDate = new Date(0)
+    let toDate = new Date()
+    
+    if(req.query.from){
+      fromDate = new Date(req.query.from)
+    }
+    
+    if(req.query.to){
+      toDate = new Date(req.query.to)
     }
 
-    if(req.query.limit){
-      resObject = resObject.log.slice(0, req.query.limit)
+    result.log = result.log.filter((session) =>{
+      let exerciseItemDate = new Date(session.date)
+      
+      return exerciseItemDate.getTime() >= fromDate.getTime()
+        && exerciseItemDate.getTime() <= toDate.getTime()
+    })
+    
   }
 
-    res.json(resObject);
-  })
+  if(req.query.limit){
+    responseObject.log = responseObject.log.slice(0,req.query.limit)
+  }
+  
+  responseObject = responseObject.toJSON();
+
+  responseObject["count"] = result.log.length;
+
+  let new_list = responseObject.log.map(function (obj) {
+    return {
+      description: obj.description,
+      duration: obj.duration,
+      date: new Date(obj.date).toDateString(),
+    };
+  });
+
+  res.json({
+    username: responseObject.username,
+    count: responseObject.count,
+    _id: responseObject._id,
+    log: new_list,
+  });
 });
 
 
