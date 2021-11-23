@@ -83,7 +83,7 @@ app.post("/api/users/:_id/exercises", bodyParser.urlencoded({extended: false}), 
   let exerciseModel = new Exercise({
     description : req.body.description, 
     duration: parseInt(req.body.duration), 
-    date: req.body.date
+    date: new Date(req.body.date).toDateString()
   })
 
   if (exerciseModel.date ===''){
