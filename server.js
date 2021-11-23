@@ -107,7 +107,26 @@ app.post("/api/users/:_id/exercises", bodyParser.urlencoded({extended: false}), 
   
 });
 
-app.get("/api/users/:_id/logs", function(req, res){
+app.get("/api/users/:_id/logs", function (req, res) {
+
+  id = req.params._id;
+  
+  User.findById(id, function (err, result) {
+
+    if (err) console.log(err)
+    let resObject = result;
+    resObject['count'] = result.log.length; 
+    res.json(resObject);
+
+  })
+});
+
+
+
+
+
+//Request Header Parser API endpoint...
+app.get("/api/users/:_id/log", function(req, res){
 
   let ip = req.header('x-forwarded-for') || req.socket.remoteAddress;
   res.json({
@@ -115,7 +134,6 @@ app.get("/api/users/:_id/logs", function(req, res){
           });
 });
 
-//Request Header Parser API endpoint...
 app.get("/api/whoami", function(req, res){
 
   let ip = req.header('x-forwarded-for') || req.socket.remoteAddress;
