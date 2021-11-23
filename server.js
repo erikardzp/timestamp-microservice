@@ -87,11 +87,11 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
   });
 
   if (newExercise.date) {
-    newExercise.date = new Date(newExercise.date).toISOString().substring(0, 10);
+    newExercise.date = new Date(newExercise.date).toISOString()
   }
 
   if (newExercise.date === "") {
-    newExercise.date = new Date().toISOString().substring(0, 10);
+    newExercise.date = new Date().toISOString()
   }
   const saveExercise = new Exercise({
     userId: req.params._id,

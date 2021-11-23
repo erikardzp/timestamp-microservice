@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 const ExcerciseSchema = new mongoose.Schema({
     description: { type: String, require: true},
     duration: { type: Number, require: true},
-    date: { type: String}
+    date: { type: String, requere: false}
 })
 
 // create a model from schema and export it
