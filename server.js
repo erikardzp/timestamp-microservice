@@ -117,9 +117,38 @@ app.get("/api/users/:_id/logs", function (req, res) {
     let resObject = result
     resObject =  resObject.toJSON();
     resObject['count'] = result.log.length; 
+
+    if(req.query.from || req.query.to){
+      
+      let fromDate = new Date(0)
+      let toDate = new Date()
+
+      if(req.query.from){
+        fromDate = new Date(req.query.from)
+      }
+
+      if(req.query.to){
+        toDate = new Date(req.query.to)
+      }
+
+      fromDate = fromDate.getTime()
+      toDate= toDate.getTime()
+
+      resObject.log = resObject.log.filter(function (session){
+        let sessionDate = new Date(session.date).getTime()
+
+        return sessionDate >= fromDate && sessionDate <= toDate
+      })
+    }
+
+    if(req.query.limit){
+      resObject = resObject.log.slice(0, req.query.limit)
+  }
+
     res.json(resObject);
   })
 });
+
 
 app.get("/api/users/:_id/logs", function (req, res) {
 
