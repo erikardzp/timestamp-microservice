@@ -22,7 +22,7 @@ app.use(bodyParser.json());
 
 // import the models of our database model
 const User = require('./models/userModel');
-const Exercise = require('./models/ExerciseModel');
+const Exercise = require('./models/exerciseModel');
 // Routes Config
 app.use(express.json({
   extended: false
