@@ -114,6 +114,20 @@ app.get("/api/users/:_id/logs", function (req, res) {
   User.findById(id, function (err, result) {
 
     if (err) console.log(err)
+    let resObject = result
+    resObject =  resObject.toJSON();
+    resObject['count'] = result.log.length; 
+    res.json(resObject);
+  })
+});
+
+app.get("/api/users/:_id/logs", function (req, res) {
+
+  id = req.params._id;
+  
+  User.findById(id, function (err, result) {
+
+    if (err) console.log(err)
     let resObject = result;
     resObject['count'] = result.log.length; 
     res.json(resObject);
@@ -169,7 +183,6 @@ app.get("/api", function (req, res) {
   res.json({"unix": date.getTime(), "utc": date.toUTCString()}
     ); 
 });
-
 
 
 // listen for requests :)
