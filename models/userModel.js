@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const ExerciseSchema = require('./ExerciseModel').schema;
+const ExerciseSchema = require('./exerciseModel').schema;
 
 // instantiate a mongoose schema
 const userSchema = new mongoose.Schema({
