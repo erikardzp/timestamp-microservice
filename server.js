@@ -77,34 +77,46 @@ app.get("/api/users", async function (req, res) {
   res.json(all);
 });
 
-app.post("/api/users/:_id/exercises", bodyParser.urlencoded({extended: false}), function (req, res) {
+app.post("/api/users/:_id/exercises", async (req, res) => {
+  const { description, duration, date } = req.body;
 
-  let id = req.params._id
-  let exerciseModel = new Exercise({
-    description : req.body.description, 
-    duration: parseInt(req.body.duration), 
-    date: new Date(req.body.date).toDateString()
-  })
+  let newExercise = new Exercise({
+    description,
+    duration,
+    date,
+  });
 
-  if (exerciseModel.date ===''){
-    exerciseModel.date = new Date().toISOString().substring(0,10);
+  if (newExercise.date) {
+    newExercise.date = new Date(newExercise.date).toISOString().substring(0, 10);
   }
 
-  User.findByIdAndUpdate(id, 
-    {$push: {log: exerciseModel}}, 
-    {new: true},
-    function(err, updatedUser){
-      if (err) return console.error(err);
-      let resObject = {}
-      resObject['username'] = updatedUser.username,
-      resObject['description'] = exerciseModel.description,
-      resObject['duration'] = exerciseModel.duration,
-      resObject['date'] = new Date(exerciseModel.date).toDateString(),
-      resObject['_id'] = updatedUser._id
-      res.json(resObject);
+  if (newExercise.date === "") {
+    newExercise.date = new Date().toISOString().substring(0, 10);
+  }
+  const saveExercise = new Exercise({
+    userId: req.params._id,
+    description,
+    duration,
+    date,
+  });
+
+  await saveExercise.save();
+  User.findByIdAndUpdate(
+    req.params._id,
+    { $push: { log: newExercise } },
+    { new: true },
+    (error, updatedUser) => {
+      if (!error) {
+        let responseObject = {};
+        responseObject["username"] = updatedUser.username;
+        responseObject["description"] = newExercise.description;
+        responseObject["duration"] = newExercise.duration;
+        responseObject["date"] = new Date(newExercise.date).toDateString();
+        responseObject["_id"] = updatedUser.id;
+        res.json(responseObject);
+      }
     }
-  )
-  
+  );
 });
 
 app.get("/api/users/:_id/logs", async function (req, res) {
