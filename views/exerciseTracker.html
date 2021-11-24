@@ -1,46 +1,99 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Exercise Tracker | freeCodeCamp</title>
-    <link rel="shortcut icon" href="https://cdn.freecodecamp.org/universal/favicons/favicon.ico"  type="image/x-icon" />
-    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css" />
+    <title>Exercise Tracker | Erope</title>
     <link href="style.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   </head>
 
   <body>
-    <div class="container">
-      <h1>Exercise tracker</h1>
-      <form action="/api/users" method="post">
-        <h3>Create a New User</h3>
-        <p><code>POST /api/users</code></p>
-        <input id="uname" type="text" name="username" placeholder="username" />
-        <input type="submit" value="Submit" />
-      </form>
-      <form id="exercise-form" method="post">
-        <h3>Add exercises</h3>
-        <p><code>POST /api/users/:_id/exercises</code></p>
-        <input id="uid" type="text" name=":_id" placeholder=":_id" />
-        <input id="desc" type="text" name="description" placeholder="description*" />
-        <input id="dur" type="text" name="duration" placeholder="duration* (mins.)" />
-        <input id="date" type="text" name="date" placeholder="date (yyyy-mm-dd)" />
-        <input type="submit" value="Submit" />
-      </form>
-      <p>
-        <strong>GET user's exercise log: </strong>
-        <code>GET /api/users/:_id/logs?[from][&amp;to][&amp;limit]</code>
-      </p>
-      <p><strong>[ ]</strong> = optional</p>
-      <p><strong>from, to</strong> = dates (yyyy-mm-dd); <strong>limit</strong> = number</p>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="#">Microservicios</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+          <li class="nav-item">
+            <a class="nav-link"  href="/timestamp">Timestamp <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/requestHeader">Request Header Parser</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/urlShortener">URL Shortener</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/exerciseTracker">Exercise Tracker</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <h1 class="text-warning text-center">Exercise tracker</h1>
+    <hr/>
+    <div class="col">
+      <p class="text-justify">Es un pequeño microservicio que trabaja de la siguiente manera:
+      <ol>
+          <li>Se manda una solicitud <strong>POST /api/users</strong> devuelve un objeto JSON:</li>
+            <p class="text-warning text-center"> { "username": "John Doe", "_id": "619db23047b9882d24aa6fb0"
+            }</p>
+          <li>Puede realizar una solicitud<strong> GET /api/users</strong> para obtener una lista de todos los usuarios.</li>
+          <li>Puede realizar una solicitud<strong> POST /api/users/:_id/exercises</strong> con los datos del formulario description, duration y, opcionalmente date. Si no se proporciona ninguna fecha, se utilizará la fecha actual. La respuesta devuelta será el objeto de usuario con los campos de ejercicio agregados: </li>
+            <p class="text-warning text-center">{
+              "username": "John Doe",
+              "description": "Comer",
+              "duration": 45,
+              "_id": "619db23047b9882d24aa6fb0",
+              "date": "Tue Nov 23 2021"
+            }</p>
+          <li>Una solicitud al registro de<strong> GET /api/users/:_id/logs</strong> devuelve un objeto de usuario con un <strong>count</strong> propiedad que representa el número de ejercicios que pertenecen a ese usuario.</li>
+          <li>Puede añadir <strong>from</strong>, <strong>to</strong> y <strong>limit</strong> parámetros a una <strong>GET /api/users/:_id/logs</strong> petición para recuperar parte del registro de cualquier usuario.</li>
+            <ul>
+              <li>From y to son fechas en YYYY-MM-DD formato.</li> 
+              <li>Limit es un número entero de cuántos registros se deben devolver.</li> 
+            </ul>
+       </ol>      
     </div>
-    <script>
-      const exerciseForm = document.getElementById("exercise-form");
+    <div class="container">
+    <form action="/api/users" method="post">
+      <h4>Create a New User</h4>
+      <p><code>POST /api/users</code></p>
+      <input id="uname" type="text" name="username" placeholder="username" />
+      <input type="submit" value="Submit" />
+    </form>
+    
+    <form id="exercise-form" method="post">
+      <h4>Add exercises</h4>
+      <p><code>POST /api/users/:_id/exercises</code></p>
+      <input id="uid" type="text" name=":_id" placeholder=":_id" />
+      <input id="desc" type="text" name="description" placeholder="description*" />
+      <input id="dur" type="text" name="duration" placeholder="duration* (mins.)" />
+      <input id="date" type="text" name="date" placeholder="date (yyyy-mm-dd)" />
+      <input type="submit" value="Submit" />
+    </form>
+    <p>
+      <strong>GET user's exercise log: </strong>
+      <code>GET /api/users/:_id/logs?[from][&amp;to][&amp;limit]</code>
+    </p>
+    <p><strong>[ ]</strong> = optional</p>
+    <p><strong>from, to</strong> = dates (yyyy-mm-dd); <strong>limit</strong> = number</p>
+  </div>
+  <script>
+    const exerciseForm = document.getElementById("exercise-form");
 
-      exerciseForm.addEventListener("submit", () => {
-        const userId = document.getElementById("uid").value;
-        exerciseForm.action = `/api/users/${userId}/exercises`;
+    exerciseForm.addEventListener("submit", () => {
+      const userId = document.getElementById("uid").value;
+      exerciseForm.action = `/api/users/${userId}/exercises`;
 
-        exerciseForm.submit();
-      });
-    </script>
+      exerciseForm.submit();
+    });
+  </script>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
   </body>
 </html>

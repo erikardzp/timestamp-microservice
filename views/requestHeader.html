@@ -3,31 +3,61 @@
 <html>
 
    <head>
-      <title>Request Header Parser</title>
-      <link rel="shortcut icon" href="https://cdn.hyperdev.com/us-east-1%3A52a203ff-088b-420f-81be-45bf559d01b1%2Ffavicon.ico" type="image/x-icon"/>
-      <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
+      <title>Request Header Parser | Erope</title>
       <link href="style.css" rel="stylesheet" type="text/css">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
    </head>
 
    <body>
-      <div class="container">
-        <h2>Request Header Parser Microservice</h2>
+     <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="#">Microservicios</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-        <h3>Example Usage:</h3>
-        <p>
-          <a href="/api/whoami">[base url]/api/whoami</a>
-        </p>
+      <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+          <li class="nav-item">
+            <a class="nav-link"  href="/timestamp">Timestamp <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/requestHeader">Request Header Parser</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/urlShortener">URL Shortener</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/exerciseTracker">Exercise Tracker</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    
+    <h1 class="text-info text-center">Request Header Parser Microservicio</h1>
+    <hr/>
 
-        <h3>Example Output:</h3>
-        <p>
-          <code>{"ipaddress":"::ffff:159.20.14.100","language":"en-US,en;q=0.5",<br>"software":"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:50.0) Gecko/20100101 Firefox/50.0"}</code>
-        </p>
-      </div>
-      <div class="footer">
-        <p>
-          by <a href="https://www.freecodecamp.org">freeCodeCamp</a>
-        </p>
-      </div>
+    <div class="col">
+      <p class="text-justify">Es un pequeño microservicio que trabaja de la siguiente manera:</p>
+        <ol>
+          <li class="text-justify">Si se manda una solicitud a <strong>/api/whoami</strong> devuelve un objeto JSON con su dirección IP en la ipaddress-key, con su idioma preferido en la language-key y con su software en la software-key.</li>
+        </ol>
+    </div>
+
+    <div class="container text-center">
+      <h4 class="text-info">Ejemplo de uso:</h4>
+      <p>
+        <a href="/api/whoami">[base url]/api/whoami</a>
+      </p>
+
+      <h4 class="text-info">Examplo de respuesta:</h4>
+      <p class="text-center">{ "ipaddress":"::ffff:159.20.14.100", "language":"en-US,en;q=0.5",
+        "software": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:50.0) Gecko/20100101 Firefox/50.0" }</p>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
    </body>
 
 

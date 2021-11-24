@@ -9,6 +9,11 @@ body {
 	line-height: 1.4em;
 }
 
+h1 {
+	color: white;
+	text-align: center;
+  }
+
 .container {
 	padding: 0;
 	margin-top: 40px;

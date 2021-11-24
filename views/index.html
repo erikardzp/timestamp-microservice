@@ -1,17 +1,110 @@
 <!DOCTYPE html>
+<html lang="en">
+<title>Microservicios | Erope</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<link rel="stylesheet" href="/public/styles.css">
+<body>
 
-<html>
-   <head>
-      <title>Erika Portfolio App</title>
-   </head>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#">Microservicios</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
 
-   <body>
-    <h1>Erika Portfolio Microservices App</h1>
-    <ul>
-      <li><a href="/timestamp">Timestamp</a></li>
-      <li><a href="/requestHeader">Request Header Parser</a></li>
-      <li><a href="/urlShortener">URL Shortener</a></li>
-      <li><a href="/exerciseTracker">Exercise Tracker</a></li>
+  <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+      <li class="nav-item">
+        <a class="nav-link"  href="/timestamp">Timestamp <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/requestHeader">Request Header Parser</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/urlShortener">URL Shortener</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/exerciseTracker">Exercise Tracker</a>
+      </li>
     </ul>
-  </body>
+  </div>
+</nav>
+
+<!-- Grid system -->
+<div class="container">
+  <div class="row">
+    <div class="col ">
+      <h1 class="text-success text-center">Timestamp</h1>
+      <p class="text-justify">Es un pequeño microservicio que trabaja de la siguiente manera:</p>
+      <ol>
+        <li class="text-justify">Si se manda una solicitud a <strong>/api/:date?</strong> con una fecha válida devuelve un objeto JSON con una unix-key que es una marca de tiempo de Unix de la fecha de entrada en milisegundos y una utc-key que es una cadena de la fecha de entrada, ejemplo:
+          <p class="text-success text-center">{ "unix":1451001600000, "utc":"Fri, 25 Dec 2015 00:00:00 GMT" }</p>
+        </ul>  
+        <li class="text-justify">Si se manda una solicitud a <strong>/api/1451001600000</strong> siendo el segundo parametro un timestamp  regresa un objeto JSON:</li>
+          <p class="text-success text-center">{ unix: 1451001600000, utc: "Fri, 25 Dec 2015 00:00:00 GMT" }</p>
+      </ol>
+    </div>
+    <div class="col">
+      <h1 class="text-info text-center">Request Header Parser</h1>
+      <p class="text-justify">Es un pequeño microservicio que trabaja de la siguiente manera:</p>
+        <ol>
+          <li class="text-justify">Si se manda una solicitud a <strong>/api/whoami</strong> devuelve un objeto JSON con su dirección IP en la ipaddress-key, con su idioma preferido en la language-key y con su software en la software-key, ejemplo:</li>
+        </ol>
+        <p class="text-info text-center">{ "ipaddress":"::ffff:159.20.14.100", "language":"en-US,en;q=0.5",
+          "software": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:50.0) Gecko/20100101 Firefox/50.0" }</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <h1 class="text-danger text-center">URL Shortener</h1>
+      <p class="text-justify">Es un pequeño microservicio que trabaja de la siguiemte manera:</p>
+      <ol>
+        <li class="text-justify">Se puede PUBLICAR una URL y el endpoint <strong>api/shorturl/</strong> regresara un objeto JSON con propiedades original_url y short_url, ejemplo:</li>
+          <p class="text-danger text-center">{ original_url : 'https://freeCodeCamp.org', short_url : 1}</p>
+        <li class="text-justify">Cuando se visite <strong>/api/shorturl/:short_url,</strong> será redirigido a la URL original.</li>
+        <li class="text-justify">Si se manda una URL no válida que no sigue el http://www.example.comformato válido, la respuesta JSON contendrá:</li>
+            <p class="text-danger text-center">{ error: 'invalid url' }</p>
+      </ol> 
+    </div>
+    <div class="col">
+      <h1 class="text-warning text-center">Exercise Tracker</h1>
+      <p class="text-justify">Es un pequeño microservicio que trabaja de la siguiente manera, si se manda una solicitud <strong>POST /api/users</strong> devuelve un objeto JSON:</p>
+          <p class="text-warning text-center"> { "username": "John Doe", "_id": "619db23047b9882d24aa6fb0"
+          }</p>
+        <li>Puede realizar una solicitud<strong> GET /api/users</strong> para obtener una lista de todos los usuarios.</li>
+        <li>Puede realizar una solicitud<strong> POST /api/users/:_id/exercises</strong> con los datos del formulario description, duration y, opcionalmente date. Si no se proporciona ninguna fecha, se utilizará la fecha actual. La respuesta devuelta será el objeto de usuario con los campos de ejercicio agregados: </li>
+          <p class="text-warning text-center">{
+            "username": "John Doe",
+            "description": "Comer",
+            "duration": 45,
+            "_id": "619db23047b9882d24aa6fb0",
+            "date": "Tue Nov 23 2021"
+          }</p>
+        <li>Una solicitud al registro de<strong> GET /api/users/:_id/logs</strong> devuelve un objeto de usuario con un <strong>count</strong> propiedad que representa el número de ejercicios que pertenecen a ese usuario.</li>
+        <li>Puede añadir <strong>from</strong>, <strong>to</strong> y <strong>limit</strong> parámetros a una <strong>GET /api/users/:_id/logs</strong> petición para recuperar parte del registro de cualquier usuario.</li>
+          <ul>
+            <li>From y to son fechas en YYYY-MM-DD formato.</li> 
+            <li>Limit es un número entero de cuántos registros se deben devolver.</li> 
+          </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<div>
+  <footer id="myFooter">
+    <div class="w3-container w3-theme-l2 w3-padding-32">
+      <h4>Footer</h4>
+    </div>
+  </footer>
+</div>
+
+<!-- END MAIN -->
+</div>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
 </html>
